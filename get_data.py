@@ -17,6 +17,7 @@ def __press_download_btn(url, btn_class_name, file_match_pattern, other_actions=
 
         # Do some other optional actions (like changing the time period)
         other_actions(driver)
+        sleep(5)
 
         # Press the download button
         download_btn = driver.find_element(By.CLASS_NAME, btn_class_name)
@@ -31,6 +32,7 @@ def __press_download_btn(url, btn_class_name, file_match_pattern, other_actions=
         file_path = lambda: sorted(Path(Path.home() / 'Downloads').iterdir(), key=os.path.getmtime)[-1]
         while not re.match(file_match_pattern, file_path().name):#file_path().endswith('.tmp') or not file_path().endswith('.csv') :
             sleep(1)
+            print('Waiting download...')
         driver.quit()
         return str(file_path())
 
@@ -59,7 +61,6 @@ def get_company_data(company_symbol:str, time_period:str):
         actions = webdriver.ActionChains(driver)
         actions.move_to_element(time_period_btn).perform()
         actions.click().perform()
-        sleep(5)
         
     file_path = __press_download_btn(
         f'https://www.nasdaq.com/market-activity/stocks/{company_symbol.lower()}/historical/', 
