@@ -8,4 +8,4 @@
 4. With the data obtained, it generates an average to know if the price will go up or down and show the results.
 
 ## How to run the program
-Having [Pandas](https://pypi.org/project/pandas/), [Selenium](https://pypi.org/project/selenium/) and [Kivy](https://pypi.org/project/Kivy/) libraries installed (and `Python 3` of course), execute `main.py`.
+Having [Pandas](https://pypi.org/project/pandas/), [Selenium](https://pypi.org/project/selenium/) and [Kivy](https://pypi.org/project/Kivy/) libraries installed (and `Python 3` of course), execute `main.py`. Also, you'll need to have Google Chrome installed.
