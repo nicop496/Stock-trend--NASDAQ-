@@ -1,5 +1,6 @@
 import os, re
 from time import sleep
+from datetime import datetime as dt
 from pandas import read_csv
 from pathlib import Path
 from selenium import webdriver
@@ -28,21 +29,24 @@ def __press_download_btn(url, btn_class_name, file_match_pattern, other_actions=
         raise
 
     else:
-        # Get and return the file
+        # Get and return the file path
         file_path = lambda: sorted(Path(Path.home() / 'Downloads').iterdir(), key=os.path.getmtime)[-1]
-        while not re.match(file_match_pattern, file_path().name):#file_path().endswith('.tmp') or not file_path().endswith('.csv') :
+        while not re.match(file_match_pattern, file_path().name):
             sleep(1)
             print('Waiting download...')
         driver.quit()
-        return str(file_path())
+        return file_path()
 
 
 def get_companies_list():
-    file_path = __press_download_btn(
-        'https://www.nasdaq.com/market-activity/stocks/screener/', 
-        'ns-download-1', 
-        r'(nasdaq_screener_)[0-9]+(\.csv)$')
-    df = read_csv(file_path, encoding='latin1', on_bad_lines='skip', index_col=0)
+    filename = f'Companies list {dt.today().month}-{dt.today().year}.csv'
+    if not filename in os.listdir():
+        filepath = __press_download_btn(
+            'https://www.nasdaq.com/market-activity/stocks/screener/', 
+            'ns-download-1', 
+            r'(nasdaq_screener_)[0-9]+(\.csv)$')
+        os.rename(filepath, filename)
+    df = read_csv(filename, encoding='latin1', on_bad_lines='skip', index_col=0)
     return df[['Name', 'Country', 'Sector', 'Market Cap']]
 
 
