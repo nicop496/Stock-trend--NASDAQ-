@@ -1,6 +1,6 @@
 # Folders
 /__pycache__
+/Downloaded data/*
 
 # File extensions
 *.png
-*.csv
