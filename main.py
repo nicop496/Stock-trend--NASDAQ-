@@ -1,5 +1,5 @@
 from pandas import Series
-from get_data import read_csv, get_companies_list
+from get_data import get_companies_list, get_company_data
 
 from kivy.app import App
 from kivy.uix.boxlayout import BoxLayout
@@ -131,14 +131,21 @@ class InputScreen(BoxLayout):
 
 
 class CompanyWidget(BoxLayout):
+    symbol = StringProperty()
+    name = StringProperty()
+    
     def __init__(self, symbol, name, **kwargs):
         super().__init__(**kwargs)
-        self.ids.symbol_label.text = symbol
-        self.ids.name_label.text = name
+        self.symbol = symbol
+        self.name = name
 
 
 class FiltersWidget(BoxLayout):
     title = StringProperty()
+
+
+class TimePeriodRadioBtn(BoxLayout):
+    label = StringProperty()
 
 
 class ScrollViewContainer(BoxLayout): 

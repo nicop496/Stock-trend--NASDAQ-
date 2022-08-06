@@ -1,4 +1,4 @@
-#:import utils kivy.utils
+#:import Factory kivy.factory.Factory
 
 
 <InputScreen>:
@@ -96,13 +96,15 @@
 <CompanyWidget>:
     height: '25dp'
     size_hint_y: None
-    # Symbol label
-    Label:
-        id: symbol_label
+    # Symbol button
+    Button:
+        text: root.symbol
         size_hint_x: .2
+        background_color: .5, .5, .5
+        on_release: Factory.TimePeriodPopup().open()
     # Name label
     Label:
-        id: name_label
+        text: root.name
         size_hint_x: .8
         text_size: self.size
         halign: 'left'
@@ -126,3 +128,40 @@
     hint_text: 'Enter a number'
     multiline: False
     input_filter: 'int'
+    font_size: self.height/1.8
+
+
+<TimePeriodRadioBtn>:
+    orientation: 'vertical'
+    Label:
+        text: root.label
+    CheckBox:
+        group: 'time_period'
+
+
+<TimePeriodPopup@Popup>:
+    title: 'Please select a time period'
+    auto_dismiss: False
+    size_hint: .5, .5
+    # Content
+    BoxLayout:
+        orientation: 'vertical'
+        # Radio buttons
+        BoxLayout:
+            TimePeriodRadioBtn:
+                label: '1M'
+            TimePeriodRadioBtn:
+                label: '6M'
+            TimePeriodRadioBtn:
+                label: 'YTD'
+            TimePeriodRadioBtn:
+                label: '1Y'
+            TimePeriodRadioBtn:
+                label: '5Y'
+            TimePeriodRadioBtn:
+                label: '10Y'
+        # Done button
+        Button:
+            text: 'Done'
+            size_hint_y: .2
+            on_release: root.dismiss()
