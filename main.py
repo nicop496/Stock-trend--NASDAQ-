@@ -10,6 +10,10 @@ from kivy.uix.label import Label
 from kivy.uix.popup import Popup
 
 
+def analyze_company_data(df):
+    mpf.plot(df, type='candle' if len(df) <= 200 else 'line', mav=(12, 26), volume=True, style='yahoo')
+
+
 class InputScreen(BoxLayout):
     PER_PAGE = 150
     COMPANIES_DF = get_nasdaq_index()
@@ -102,7 +106,7 @@ class InputScreen(BoxLayout):
             if min_or_max == 'min':
                 return df['Market Cap'] >= value
             if min_or_max == 'max':
-                return df['Market Cap'] <= value
+                return (df['Market Cap'] <= value) & (df['Market Cap'] > 0)
 
         # Country
         def country_and_sector(title, df):
@@ -126,8 +130,8 @@ class InputScreen(BoxLayout):
 
         # Otherwise, get and then show the new filtered dataframe
         super_filter = filter_series[0]
-        for series in filter_series:
-            super_filter = super_filter & series
+        for fs in filter_series:
+            super_filter = super_filter & fs
         new_df = new_df[super_filter]
         self.show_new_df(new_df)
 
@@ -165,9 +169,7 @@ class TimePeriodPopup(Popup):
 
     def done_btn_pressed(self):
         self.dismiss()
-        df = get_company_data(self.symbol, self.time_period_selected)
-        t = 'line' if self.TIME_PERIODS.index(self.time_period_selected) >= 3 else 'candle'
-        mpf.plot(df, type=t, mav=(12, 26), volume=True, style='yahoo')
+        analyze_company_data(get_company_data(self.symbol, self.time_period_selected))
 
 
 class FiltersWidget(BoxLayout):
