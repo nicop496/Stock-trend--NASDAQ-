@@ -67,8 +67,10 @@ def get_company_data(symbol:str, time_period:str):
     - 'y10' (last ten years)
     '''
     def set_time_period(driver):
+        if time_period == 'm1':
+            return
         time_period_btn = WebDriverWait(driver, 20).until(
-            element_to_be_clickable((By.XPATH, f'//button[@data-value="{time_period}"]'))
+            element_to_be_clickable((By.XPATH, f'//button[@data-value="{time_period.lower()}"]'))
         )
         driver.execute_script('arguments[0].click();', time_period_btn)
 
@@ -85,6 +87,9 @@ def get_company_data(symbol:str, time_period:str):
 
     df = pd.read_csv(DATA_PATH / filename, index_col=0)
     df.index = pd.to_datetime(df.index, infer_datetime_format=True)
+    df = df.rename(columns={'Close/Last':'Close'})
+    df = df[['Open', 'High', 'Low', 'Close', 'Volume']]
+    df = df.iloc[::-1]
     for i in df:
         if df[i].dtype == object_:
             df[i] = pd.to_numeric(df[i].apply(lambda val: val[1:]))

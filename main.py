@@ -1,16 +1,18 @@
 from pandas import Series
-from get_data import get_companies_list, get_company_data
+from get_data import get_nasdaq_index, get_company_data
+import mplfinance as mpf
 
 from kivy.app import App
 from kivy.uix.boxlayout import BoxLayout
 from kivy.properties import StringProperty
 from kivy.uix.checkbox import CheckBox
 from kivy.uix.label import Label
+from kivy.uix.popup import Popup
 
 
 class InputScreen(BoxLayout):
     PER_PAGE = 150
-    COMPANIES_DF = get_companies_list()
+    COMPANIES_DF = get_nasdaq_index()
 
     def __init__(self, **kwargs):
         super().__init__(**kwargs)
@@ -89,7 +91,7 @@ class InputScreen(BoxLayout):
             if not msg:
                 return
             pattern = f'(?:{msg.replace(" ", "|")})'
-            return df['Name'].str.contains(pattern, case=False)
+            return (df['Name'].str.contains(pattern, case=False)) | (df.index.str.contains(pattern, case=False))
 
         # Market cap
         def market_cap(min_or_max:str, df):
@@ -140,12 +142,36 @@ class CompanyWidget(BoxLayout):
         self.name = name
 
 
+class TimePeriodPopup(Popup):
+    TIME_PERIODS = 'M1', 'M6', 'YTD', 'Y1', 'Y5', 'Y10'
+    time_period_selected = StringProperty()
+
+    def __init__(self, symbol, **kwargs):
+        super().__init__(**kwargs)
+        self.symbol = symbol
+
+        # Create labels and radio buttons
+        for time_period in self.TIME_PERIODS:
+            label = Label(text=time_period)
+            radio_btn = CheckBox(group='time_period_radio_btn')
+            radio_btn.bind(active=self.radio_btn_pressed)
+            box = BoxLayout(orientation='vertical')
+            box.add_widget(label)
+            box.add_widget(radio_btn)
+            self.ids.radio_btns_layout.add_widget(box)
+
+    def radio_btn_pressed(self, instance, value):
+        self.time_period_selected = instance.parent.children[1].text if value else ''
+
+    def done_btn_pressed(self):
+        self.dismiss()
+        df = get_company_data(self.symbol, self.time_period_selected)
+        t = 'line' if self.TIME_PERIODS.index(self.time_period_selected) >= 3 else 'candle'
+        mpf.plot(df, type=t, mav=(12, 26), volume=True, style='yahoo')
+
+
 class FiltersWidget(BoxLayout):
     title = StringProperty()
-
-
-class TimePeriodRadioBtn(BoxLayout):
-    label = StringProperty()
 
 
 class ScrollViewContainer(BoxLayout): 

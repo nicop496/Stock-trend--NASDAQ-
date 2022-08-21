@@ -101,7 +101,7 @@
         text: root.symbol
         size_hint_x: .2
         background_color: .5, .5, .5
-        on_release: Factory.TimePeriodPopup().open()
+        on_release: Factory.TimePeriodPopup(root.symbol).open()
     # Name label
     Label:
         text: root.name
@@ -131,37 +131,18 @@
     font_size: self.height/1.8
 
 
-<TimePeriodRadioBtn>:
-    orientation: 'vertical'
-    Label:
-        text: root.label
-    CheckBox:
-        group: 'time_period'
-
-
-<TimePeriodPopup@Popup>:
+<TimePeriodPopup>:
     title: 'Please select a time period'
-    auto_dismiss: False
     size_hint: .5, .5
     # Content
     BoxLayout:
         orientation: 'vertical'
         # Radio buttons
         BoxLayout:
-            TimePeriodRadioBtn:
-                label: '1M'
-            TimePeriodRadioBtn:
-                label: '6M'
-            TimePeriodRadioBtn:
-                label: 'YTD'
-            TimePeriodRadioBtn:
-                label: '1Y'
-            TimePeriodRadioBtn:
-                label: '5Y'
-            TimePeriodRadioBtn:
-                label: '10Y'
+            id: radio_btns_layout
         # Done button
         Button:
             text: 'Done'
             size_hint_y: .2
-            on_release: root.dismiss()
+            on_release: root.done_btn_pressed()
+            disabled: not root.time_period_selected
