@@ -4,3 +4,6 @@
 
 # File extensions
 *.png
+
+# Files
+chromedriver.exe

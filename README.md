@@ -8,4 +8,4 @@
 4. With the data obtained, it shows many tecnical analysis indicators to know if the price will go up or down and show the results. (unfinished)![](screenshots/graph.jpg)
 
 ## How to run the program
-Having [Pandas](https://pypi.org/project/pandas/), [Numpy](https://pypi.org/project/numpy/), [mplfinance](https://pypi.org/project/mplfinance/), [Selenium](https://pypi.org/project/selenium/) and [Kivy](https://pypi.org/project/Kivy/) libraries installed (and `Python 3` of course), execute `main.py`. Also, you'll need to have Google Chrome installed.
+Having [Pandas](https://pypi.org/project/pandas/), [Numpy](https://pypi.org/project/numpy/), [mplfinance](https://pypi.org/project/mplfinance/), [Selenium](https://pypi.org/project/selenium/) and [Kivy](https://pypi.org/project/Kivy/) libraries installed (and `Python 3` of course), execute `main.py`. Also, you'll need to have Google Chrome and its driver installed (you can download the driver [here](https://chromedriver.chromium.org/downloads)).
